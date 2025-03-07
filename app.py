@@ -9,7 +9,7 @@ app = Flask(__name__)
 app.config['SECRET_KEY'] = 'sua-chave-secreta-aqui'  # Substitua por uma chave segura
 app.config['SESSION_TYPE'] = 'filesystem'
 Session(app)
-socketio = SocketIO(app)
+socketio = SocketIO(app, cors_allowed_origins="*")  # ou especifique "https://testeinsta.onrender.com"
 
 # Arquivo para armazenar jogadores
 JOGADORES_FILE = "jogadores.json"
@@ -548,5 +548,6 @@ def calcular_resultado(escolha_j1, escolha_j2):
     return {"error": "Escolhas inválidas"}
 
 if __name__ == "__main__":
-    salvar_jogadores([])
-    socketio.run(app, debug=True)
+    import eventlet
+    eventlet.monkey_patch()
+    socketio.run(app, host="0.0.0.0", port=5000)
